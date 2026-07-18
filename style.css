@@ -1,0 +1,640 @@
+/* =====================================================================
+   CRACK THE CODE — stylesheet
+   Organized into: 1) Design tokens  2) Reset  3) Layout  4) Components
+   5) States & feedback colors  6) Animations  7) Responsive breakpoints
+   ===================================================================== */
+
+/* ---------------------------------------------------------------------
+   1. DESIGN TOKENS
+   All colors, fonts and sizes live here as CSS custom properties, so the
+   whole theme can be changed in one place (see the [data-theme="light"]
+   override lower down for the light-mode palette).
+   --------------------------------------------------------------------- */
+:root {
+  /* --- Dark theme (default): deep-vault ink with a brass accent --- */
+  --bg: #0f1428;
+  --bg-glow: radial-gradient(circle at 50% -10%, #1c2550 0%, #0f1428 55%);
+  --card-bg: #171d3a;
+  --card-border: rgba(255, 255, 255, 0.08);
+  --text: #edeae0;
+  --text-muted: #9aa1c0;
+
+  --accent: #d4a73d;         /* brass */
+  --accent-soft: rgba(212, 167, 61, 0.16);
+  --accent-contrast: #1a1406;
+
+  --success: #4fae7e;
+  --success-soft: rgba(79, 174, 126, 0.16);
+  --error: #e2664b;
+  --error-soft: rgba(226, 102, 75, 0.16);
+
+  --shadow-lg: 0 24px 60px rgba(0, 0, 0, 0.45);
+  --shadow-sm: 0 6px 16px rgba(0, 0, 0, 0.3);
+
+  /* --- Typography --- */
+  --font-display: "Space Grotesk", sans-serif;
+  --font-body: "Inter", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+
+  /* --- Shape & spacing --- */
+  --radius-lg: 22px;
+  --radius-md: 14px;
+  --radius-sm: 8px;
+}
+
+/* Light theme override — parchment / blueprint feel, same brass accent */
+[data-theme="light"] {
+  --bg: #f2eee3;
+  --bg-glow: radial-gradient(circle at 50% -10%, #ffffff 0%, #f2eee3 60%);
+  --card-bg: #ffffff;
+  --card-border: rgba(31, 35, 64, 0.08);
+  --text: #211d38;
+  --text-muted: #6b6f8c;
+
+  --accent: #a9791f;
+  --accent-soft: rgba(169, 121, 31, 0.12);
+  --accent-contrast: #fffaf0;
+
+  --success: #2f8f5b;
+  --success-soft: rgba(47, 143, 91, 0.12);
+  --error: #c94a32;
+  --error-soft: rgba(201, 74, 50, 0.12);
+
+  --shadow-lg: 0 24px 50px rgba(31, 35, 64, 0.12);
+  --shadow-sm: 0 6px 14px rgba(31, 35, 64, 0.08);
+}
+
+/* ---------------------------------------------------------------------
+   2. RESET
+   A small, standard reset so the design looks the same in every browser.
+   --------------------------------------------------------------------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  color: var(--text);
+  background: var(--bg-glow);
+  background-color: var(--bg);
+  min-height: 100vh;
+  transition: background-color 0.4s ease, color 0.4s ease;
+  -webkit-font-smoothing: antialiased;
+}
+
+button,
+input {
+  font-family: inherit;
+  color: inherit;
+}
+
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Visible keyboard focus everywhere (accessibility) */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Respect users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* ---------------------------------------------------------------------
+   3. LAYOUT
+   --------------------------------------------------------------------- */
+.app {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 28px 20px 40px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 22px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand__mark {
+  font-size: 1.9rem;
+  line-height: 1;
+}
+
+.brand__title {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  margin: 0;
+}
+
+.brand__subtitle {
+  margin: 2px 0 0;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  padding: 26px 22px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  transition: background-color 0.4s ease, border-color 0.4s ease;
+}
+
+.section-label {
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: var(--text-muted);
+  margin: 0 0 10px;
+}
+
+.app-footer {
+  margin-top: 22px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.app-footer__note {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+/* ---------------------------------------------------------------------
+   4. COMPONENTS
+   --------------------------------------------------------------------- */
+
+/* --- Icon / text toggle buttons (theme + sound) --- */
+.icon-toggle,
+.text-toggle {
+  background: var(--accent-soft);
+  border: 1px solid var(--card-border);
+  color: var(--text);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: transform 0.15s ease, background-color 0.2s ease;
+}
+
+.icon-toggle {
+  width: 42px;
+  height: 42px;
+  font-size: 1.1rem;
+  display: grid;
+  place-items: center;
+}
+
+.text-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.icon-toggle:hover,
+.text-toggle:hover {
+  transform: translateY(-2px);
+  background: var(--accent);
+  color: var(--accent-contrast);
+}
+
+/* --- Difficulty selector --- */
+.difficulty__options {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.difficulty__btn {
+  background: transparent;
+  border: 1.5px solid var(--card-border);
+  border-radius: var(--radius-md);
+  padding: 10px 6px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  transition: transform 0.15s ease, border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.difficulty__btn:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent);
+}
+
+.difficulty__btn.is-active {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.difficulty__name {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.difficulty__range {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+/* --- Signature element: the bounds gauge ---
+   A horizontal "vault dial" that visually narrows to show the shrinking
+   range of possible numbers as the player gets closer to the target. */
+.gauge__labels {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.gauge__bound {
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.gauge__caption {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.62rem;
+}
+
+.gauge__track {
+  position: relative;
+  height: 10px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  overflow: visible;
+}
+
+.gauge__fill {
+  position: absolute;
+  inset: 0;
+  left: 0%;
+  width: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--accent), var(--success));
+  transition: left 0.5s ease, width 0.5s ease;
+}
+
+.gauge__needle {
+  position: absolute;
+  top: 50%;
+  left: 0%;
+  width: 14px;
+  height: 14px;
+  background: var(--card-bg);
+  border: 3px solid var(--accent);
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  transition: left 0.5s ease, transform 0.3s ease;
+  box-shadow: var(--shadow-sm);
+}
+
+.gauge__needle.is-visible {
+  transform: translate(-50%, -50%) scale(1);
+}
+
+/* --- Guess form --- */
+.guess-form__label {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.guess-form__row {
+  display: flex;
+  gap: 10px;
+}
+
+.guess-form__input {
+  flex: 1;
+  min-width: 0;
+  background: transparent;
+  border: 1.5px solid var(--card-border);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  font-family: var(--font-mono);
+  font-size: 1.4rem;
+  font-weight: 600;
+  text-align: center;
+  transition: border-color 0.2s ease;
+}
+
+.guess-form__input::placeholder {
+  color: var(--text-muted);
+  opacity: 0.5;
+}
+
+.guess-form__input:focus {
+  border-color: var(--accent);
+}
+
+/* Hide the native spinner arrows for a cleaner look (still an <input type="number">) */
+.guess-form__input::-webkit-outer-spin-button,
+.guess-form__input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.guess-form__input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+.guess-form__input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn {
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 12px 20px;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.2s ease;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+.btn--primary {
+  background: var(--accent);
+  color: var(--accent-contrast);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn--primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn--secondary {
+  width: 100%;
+  background: var(--success-soft);
+  color: var(--success);
+  border: 1.5px solid var(--success);
+}
+
+/* --- Feedback message --- */
+.feedback {
+  min-height: 1.3em;
+  margin: 14px 0 0;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-align: center;
+}
+
+.feedback.is-high {
+  color: var(--error);
+}
+
+.feedback.is-low {
+  color: var(--accent);
+}
+
+.feedback.is-correct {
+  color: var(--success);
+}
+
+.feedback.is-error {
+  color: var(--error);
+}
+
+/* --- Stats row --- */
+.stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.stat {
+  background: var(--accent-soft);
+  border-radius: var(--radius-md);
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.stat__label {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text-muted);
+}
+
+.stat__value {
+  font-family: var(--font-mono);
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+/* --- Guess history --- */
+.history {
+  margin-top: 18px;
+}
+
+.history__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-height: 20px;
+}
+
+.history__empty {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.history__chip {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 5px 10px;
+  border-radius: 999px;
+  border: 1.5px solid transparent;
+  animation: chip-in 0.25s ease;
+}
+
+.history__chip.is-high {
+  color: var(--error);
+  background: var(--error-soft);
+  border-color: var(--error);
+}
+
+.history__chip.is-low {
+  color: var(--accent);
+  background: var(--accent-soft);
+  border-color: var(--accent);
+}
+
+.history__chip.is-correct {
+  color: var(--success);
+  background: var(--success-soft);
+  border-color: var(--success);
+}
+
+#playAgainBtn {
+  margin-top: 20px;
+}
+
+/* ---------------------------------------------------------------------
+   6. ANIMATIONS
+   --------------------------------------------------------------------- */
+@keyframes chip-in {
+  from {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes pop {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.04);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.card.is-winning {
+  animation: pop 0.4s ease;
+}
+
+@keyframes shake {
+  10%, 90% { transform: translateX(-1px); }
+  20%, 80% { transform: translateX(2px); }
+  30%, 50%, 70% { transform: translateX(-4px); }
+  40%, 60% { transform: translateX(4px); }
+}
+
+.guess-form__input.is-shaking {
+  animation: shake 0.4s ease;
+  border-color: var(--error);
+}
+
+/* Confetti layer used for the win celebration */
+.confetti {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 50;
+}
+
+.confetti__piece {
+  position: absolute;
+  top: -10px;
+  width: 8px;
+  height: 14px;
+  opacity: 0.9;
+  animation-name: confetti-fall;
+  animation-timing-function: ease-in;
+  animation-fill-mode: forwards;
+}
+
+@keyframes confetti-fall {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(105vh) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+/* ---------------------------------------------------------------------
+   7. RESPONSIVE BREAKPOINTS
+   --------------------------------------------------------------------- */
+@media (max-width: 380px) {
+  .brand__title {
+    font-size: 1.1rem;
+  }
+
+  .difficulty__name {
+    font-size: 0.78rem;
+  }
+
+  .difficulty__range {
+    font-size: 0.64rem;
+  }
+
+  .guess-form__input {
+    font-size: 1.2rem;
+  }
+}
+
+@media (min-width: 640px) {
+  .app {
+    padding-top: 60px;
+  }
+}

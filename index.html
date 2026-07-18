@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Crack the Code | Guess the Number</title>
+  <meta name="description" content="A polished Guess the Number game with difficulty levels, dark mode, sound effects, and a saved best score." />
+
+  <!-- Google Fonts: Space Grotesk (headings), Inter (body text), JetBrains Mono (numbers) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;600;700&display=swap"
+    rel="stylesheet"
+  />
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Decorative confetti layer, purely visual, hidden from screen readers -->
+  <div id="confetti" class="confetti" aria-hidden="true"></div>
+
+  <div class="app">
+    <!-- ===================== HEADER ===================== -->
+    <header class="app-header">
+      <div class="brand">
+        <span class="brand__mark" aria-hidden="true">🔐</span>
+        <div>
+          <h1 class="brand__title">Crack the Code</h1>
+          <p class="brand__subtitle">A "Guess the Number" game</p>
+        </div>
+      </div>
+
+      <button
+        id="themeToggle"
+        class="icon-toggle"
+        type="button"
+        aria-pressed="false"
+        aria-label="Switch to light mode"
+      >
+        <span id="themeToggleIcon" aria-hidden="true">🌙</span>
+      </button>
+    </header>
+
+    <!-- ===================== MAIN CARD ===================== -->
+    <main class="card">
+      <!-- Difficulty selector -->
+      <section class="difficulty" aria-label="Difficulty level">
+        <h2 class="section-label">Choose your vault</h2>
+        <div class="difficulty__options" role="radiogroup" aria-label="Difficulty level">
+          <button type="button" class="difficulty__btn" data-min="1" data-max="50">
+            <span class="difficulty__name">Easy</span>
+            <span class="difficulty__range">1–50</span>
+          </button>
+          <button type="button" class="difficulty__btn is-active" data-min="1" data-max="100" aria-pressed="true">
+            <span class="difficulty__name">Medium</span>
+            <span class="difficulty__range">1–100</span>
+          </button>
+          <button type="button" class="difficulty__btn" data-min="1" data-max="500">
+            <span class="difficulty__name">Hard</span>
+            <span class="difficulty__range">1–500</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- Signature element: the bounds gauge, a visual "dial" that narrows
+           as the player's guesses close in on the target number -->
+      <section class="gauge" aria-hidden="true">
+        <div class="gauge__labels">
+          <span id="gaugeMin" class="gauge__bound">1</span>
+          <span class="gauge__caption">possible range</span>
+          <span id="gaugeMax" class="gauge__bound">100</span>
+        </div>
+        <div class="gauge__track">
+          <div id="gaugeFill" class="gauge__fill"></div>
+          <div id="gaugeNeedle" class="gauge__needle"></div>
+        </div>
+      </section>
+
+      <!-- Guess form -->
+      <section class="game">
+        <form id="guessForm" class="guess-form" novalidate>
+          <label for="guessInput" id="guessLabel" class="guess-form__label">
+            Enter a number between 1 and 100
+          </label>
+          <div class="guess-form__row">
+            <input
+              type="number"
+              id="guessInput"
+              name="guess"
+              class="guess-form__input"
+              inputmode="numeric"
+              autocomplete="off"
+              placeholder="?"
+              min="1"
+              max="100"
+              required
+            />
+            <button type="submit" id="submitBtn" class="btn btn--primary">
+              Guess
+            </button>
+          </div>
+        </form>
+
+        <!-- Live region: screen readers announce feedback automatically -->
+        <p id="feedback" class="feedback" role="status" aria-live="polite"></p>
+
+        <div class="stats">
+          <div class="stat">
+            <span class="stat__label">Attempts</span>
+            <span id="attempts" class="stat__value">0</span>
+          </div>
+          <div class="stat">
+            <span class="stat__label">Best score</span>
+            <span id="bestScore" class="stat__value">—</span>
+          </div>
+        </div>
+
+        <div class="history">
+          <h3 class="section-label">Previous guesses</h3>
+          <ul id="historyList" class="history__list">
+            <li class="history__empty" id="historyEmpty">No guesses yet — take a shot!</li>
+          </ul>
+        </div>
+
+        <button id="playAgainBtn" class="btn btn--secondary" type="button" hidden>
+          Play again
+        </button>
+      </section>
+    </main>
+
+    <!-- ===================== FOOTER ===================== -->
+    <footer class="app-footer">
+      <button id="soundToggle" class="text-toggle" type="button" aria-pressed="true">
+        <span id="soundToggleIcon" aria-hidden="true">🔊</span>
+        <span id="soundToggleLabel">Sound on</span>
+      </button>
+      <p class="app-footer__note">Built with HTML, CSS &amp; vanilla JavaScript</p>
+    </footer>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
